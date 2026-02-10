@@ -1,6 +1,6 @@
 ---
 name: gemini-deep-research-chrome
-description: Operate Gemini in the user’s real Chrome via OpenClaw Browser Relay (profile=chrome): attach tab, open/switch Gemini, run Deep Research, start plan, monitor until done, read/export report, use Create features (webpage, infographic, quiz, flashcards, audio summary), and recover relay failures. Use when user asks to control Gemini for research/content generation.
+description: "Operate Gemini in the user’s real Chrome via OpenClaw Browser Relay (profile=chrome): attach tab, open/switch Gemini, run Deep Research, start plan, monitor until done, read/export report, use Create features (webpage, infographic, quiz, flashcards, audio summary), and recover relay failures. Use when user asks to control Gemini for research/content generation."
 ---
 
 # Gemini via Chrome Relay (Deep Research + Create)
