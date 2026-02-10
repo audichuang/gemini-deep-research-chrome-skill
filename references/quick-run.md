@@ -29,7 +29,9 @@ Use this when speed matters.
 2. Click **建立** → **建立語音摘要**.
 3. Fill prompt and submit.
 4. Monitor until done.
-5. Return play/share instruction to user.
+5. Download audio file from Gemini export/share entry.
+6. Send audio file to user in chat.
+7. Confirm delivery and offer next action.
 
 ## C) If broken
 

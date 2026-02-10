@@ -29,7 +29,9 @@ If user does not choose, suggest the most useful default:
 1. Click **建立** → **建立語音摘要**.
 2. Fill prompt/description (language/style if requested).
 3. Submit and monitor until done.
-4. Return playback/share instruction.
+4. Open **分享及匯出** (or equivalent download entry) and download the generated audio file.
+5. Send the downloaded audio file back to the user in chat (do not only say it is ready).
+6. Then return a short note with what was sent and optional follow-up actions.
 
 ### 建立資訊圖表 / 測驗 / 學習卡 / 網頁
 1. Click **建立**.

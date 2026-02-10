@@ -57,7 +57,9 @@ For **建立語音摘要**:
 2. Fill description/prompt.
 3. Submit generation.
 4. Monitor until completion.
-5. Return status + how user can play/share.
+5. Download exported audio file from Gemini (分享及匯出 / download entry).
+6. Send audio file to user in chat.
+7. Return status only after file delivery.
 
 ---
 
