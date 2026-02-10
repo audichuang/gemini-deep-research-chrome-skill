@@ -2,23 +2,35 @@
 
 Use this when Deep Research or Create generation takes minutes.
 
-## Preferred pattern: session twin
+## Preferred pattern: session twin (mandatory default)
 
 1. Main session starts task and confirms it is running.
-2. Spawn a session twin (`sessions_spawn`) to poll progress.
+2. Spawn a session twin with **`sessions_spawn`** to poll progress.
 3. Twin checks Gemini state periodically and exits only when complete/fail.
 4. Twin returns concise completion result and key output.
 
+Unless user explicitly requests manual polling, treat `sessions_spawn` as required for long-running tasks.
+
 ## Twin task template (adapt per topic)
 
-- Open current Gemini tab via Chrome relay.
-- Snapshot every 60-120s.
-- Apply completion precedence from `completion-signals.md`.
-- On completion:
-  - capture title,
-  - capture final summary/conclusion,
-  - capture actionable items,
-  - capture source-quality note.
+### `sessions_spawn` task template
+
+"Monitor a running Gemini task in Chrome Relay until completion.
+1) Use browser tool with profile=chrome.
+2) Snapshot current Gemini tab every 60-120 seconds.
+3) Apply completion precedence from completion-signals.md.
+4) If relay fails, follow recovery.md, then continue polling.
+5) On completion, return:
+   - report/title,
+   - final summary/conclusion,
+   - actionable checklist,
+   - source-quality note.
+6) If task fails/cancelled, return failure reason + fastest recovery step."
+
+### Behavior rules
+
+- Keep polling until complete/fail (do not stop early).
+- Prefer concise progress updates; avoid noisy logs.
 
 ## Optional cron pattern
 

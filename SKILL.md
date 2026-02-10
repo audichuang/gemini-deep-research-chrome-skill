@@ -63,8 +63,13 @@ For **建立語音摘要**:
 
 ## 4) Monitor long tasks
 
-For long-running jobs, use session twin pattern in `references/monitoring.md`.
+For long-running jobs, default to **`sessions_spawn`** (session twin) to monitor until completion.
 
+- Do not rely on manual user follow-up for long runs.
+- Spawn twin right after task starts running.
+- Twin must poll until done/fail and return concise result.
+
+Use implementation template in `references/monitoring.md`.
 Use completion signals and precedence in `references/completion-signals.md`.
 
 ---
@@ -86,6 +91,7 @@ When done, return:
 - Do not assume “plan shown” means “research running”.
 - Do not judge completion from one weak signal only.
 - Do not repeatedly ask user to reattach relay before trying recovery sequence.
+- Do not skip `sessions_spawn` for long-running Deep Research/Create jobs unless user explicitly asks for manual polling.
 - Do not dump full long report before giving concise summary.
 
 ---
