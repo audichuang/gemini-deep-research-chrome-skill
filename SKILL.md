@@ -92,6 +92,7 @@ When done, return:
 
 ## References
 
+- `references/quick-run.md` — 1-minute operator checklist (fast path)
 - `references/recovery.md` — relay recovery order and failure handling
 - `references/monitoring.md` — session twin and optional cron monitoring template
 - `references/completion-signals.md` — completion criteria and precedence
