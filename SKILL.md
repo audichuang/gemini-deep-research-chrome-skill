@@ -9,9 +9,10 @@ Use this skill when the user wants you to operate Gemini directly in their real 
 
 ## 1) Connect and stabilize relay
 
-1. Run `browser status` + `browser tabs` with `profile="chrome"`.
-2. Find Gemini tab URL (`gemini.google.com`).
-3. If no Gemini tab appears, ask user to:
+1. Always use browser tool with `profile="chrome"` (never `openclaw` for this workflow).
+2. Run `browser status` + `browser tabs` with `profile="chrome"`.
+3. Find Gemini tab URL (`gemini.google.com`).
+4. If no Gemini tab appears, ask user to:
    - switch to Gemini tab,
    - click OpenClaw Browser Relay toolbar button (ON).
 
