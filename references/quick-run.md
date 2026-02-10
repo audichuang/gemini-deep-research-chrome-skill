@@ -15,6 +15,13 @@ Use this when speed matters.
    - final stance,
    - action list,
    - source-quality note.
+8. Immediately offer next-action menu:
+   - 建立語音摘要（default）
+   - 建立資訊圖表
+   - 建立測驗
+   - 建立學習卡
+   - 建立網頁
+   - 分享及匯出
 
 ## B) Create 語音摘要 fast path
 

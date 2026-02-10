@@ -83,6 +83,11 @@ When done, return:
 3. actionable checklist,
 4. source-quality note when references are mixed quality.
 
+Then immediately run post-completion handoff flow in `references/post-completion-actions.md`:
+- provide one compact next-action menu,
+- default suggest **建立語音摘要** if user has no preference,
+- execute selected Create/export action directly.
+
 ---
 
 ## 6) Do not (anti-patterns)
@@ -102,3 +107,4 @@ When done, return:
 - `references/recovery.md` — relay recovery order and failure handling
 - `references/monitoring.md` — session twin and optional cron monitoring template
 - `references/completion-signals.md` — completion criteria and precedence
+- `references/post-completion-actions.md` — required follow-up actions after research completes

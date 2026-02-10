@@ -8,6 +8,7 @@ Use this when Deep Research or Create generation takes minutes.
 2. Spawn a session twin with **`sessions_spawn`** to poll progress.
 3. Twin checks Gemini state periodically and exits only when complete/fail.
 4. Twin returns concise completion result and key output.
+5. Twin must include post-completion handoff prompt (from `post-completion-actions.md`) so main flow can continue with Create/export actions.
 
 Unless user explicitly requests manual polling, treat `sessions_spawn` as required for long-running tasks.
 
