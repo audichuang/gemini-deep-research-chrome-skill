@@ -1,124 +1,97 @@
 ---
 name: gemini-deep-research-chrome
-description: "Operate Gemini in the user’s real Chrome via OpenClaw Browser Relay (profile=chrome): attach tab, open/switch Gemini, run Deep Research, start plan, monitor until done, read/export report, use Create features (webpage, infographic, quiz, flashcards, audio summary), and recover relay failures. Use when user asks to control Gemini for research/content generation."
+description: Operate Gemini in the user’s real Chrome via OpenClaw Browser Relay (profile=chrome): run Deep Research, monitor progress, read/export reports, and use Create features such as audio summaries. Use when user asks you to control Gemini directly in their Chrome tab.
 ---
 
-# Gemini via Chrome Relay (Deep Research + Create)
+# Gemini via Chrome Relay
 
-Use this skill when the user wants you to operate Gemini directly in their real Chrome tab.
+Follow this workflow to operate Gemini reliably in the user’s real Chrome tab.
+
+## Core workflow
+
+1. Connect relay and stabilize tab.
+2. Enable Deep Research (or user-requested Create flow).
+3. Execute task.
+4. Monitor until done.
+5. Extract and return useful result.
+
+---
 
 ## 1) Connect and stabilize relay
 
 1. Always use browser tool with `profile="chrome"` (never `openclaw` for this workflow).
-2. Run `browser status` + `browser tabs` with `profile="chrome"`.
+2. Run `browser status` and `browser tabs`.
 3. Find Gemini tab URL (`gemini.google.com`).
 4. If no Gemini tab appears, ask user to:
    - switch to Gemini tab,
    - click OpenClaw Browser Relay toolbar button (ON).
 
-### Recovery for `tab not found`
-
-Use this exact order:
-1. refresh tabs and retry with newest Gemini `targetId`;
-2. ask user to re-attach Relay on current Gemini tab;
-3. if still broken, restart gateway (`openclaw gateway restart`) and re-attach.
+If `tab not found`, use recovery order in `references/recovery.md`.
 
 ---
 
-## 2) Start Deep Research correctly
+## 2) Deep Research execution
 
-1. In compose area, click **工具**.
+1. Click **工具**.
 2. Enable **Deep Research**.
-3. Verify Deep Research is active (research placeholder/chip visible).
-4. Paste user research prompt and submit.
+3. Verify Deep Research is active (placeholder/chip).
+4. Submit user prompt.
+5. If plan card appears with **開始研究**, click it.
 
-### Critical nuance
-Deep Research often returns a **plan card** first. If button **開始研究** appears, click it.
-Without this click, research may never actually run.
-
----
-
-## 3) Monitor long-running jobs (session twin pattern)
-
-Deep Research can take many minutes. Do not force user to keep asking.
-
-### Preferred monitoring pattern
-
-1. Main flow:
-   - trigger task,
-   - confirm “running”.
-2. Spawn a session twin (`sessions_spawn`) for polling/checking progress.
-3. Twin periodically snapshots Gemini and checks state:
-   - running: stop button / in-progress indicators;
-   - done: “已完成” + report panel/card visible.
-4. Twin returns completion summary when done.
-
-### Optional timed reminders/checks
-
-When user wants scheduled follow-up, add `cron` checks/reminders instead of manual pinging.
-Use reminder text that clearly says it is a reminder and references the research topic.
+Important: plan generation is not execution. If **開始研究** is present, task has not started yet.
 
 ---
 
-## 4) Read report and return useful output
+## 3) Create features execution
 
-When report completes:
+Use **建立** menu when user asks for derivative output from report/content:
 
-1. Open/keep report panel on the right.
-2. Extract:
-   - executive summary,
-   - market-stage judgment / final stance,
-   - actionable checklist,
-   - key tables,
-   - source list quality.
-3. Reply in two layers:
-   - short actionable summary first,
-   - deeper analysis on request.
-4. If sources are mixed quality (blogs/media-heavy), explicitly add a risk note.
-
----
-
-## 5) Use Gemini “建立” features (not only Deep Research)
-
-From report panel top controls, click **建立** and use:
-
-- **建立網頁**: turn report into webpage/app draft.
-- **建立資訊圖表**: generate infographic.
-- **建立測驗**: create quiz.
-- **建立學習卡**: create flashcards.
-- **建立語音摘要**: generate spoken/audio-style summary from report.
+- 建立網頁
+- 建立資訊圖表
+- 建立測驗
+- 建立學習卡
+- 建立語音摘要
 
 For **建立語音摘要**:
-1. click menu item;
-2. fill prompt/description textbox;
-3. submit and monitor generation;
-4. return result status + how to play/share.
+1. Click menu item.
+2. Fill description/prompt.
+3. Submit generation.
+4. Monitor until completion.
+5. Return status + how user can play/share.
 
 ---
 
-## 6) Other high-value controls to check
+## 4) Monitor long tasks
 
-In report header/tools, also verify and use when needed:
+For long-running jobs, use session twin pattern in `references/monitoring.md`.
 
-- **目錄選單** (section navigation)
-- **分享及匯出** (share/export)
-- **資料來源區塊** (used vs reviewed-not-used sources)
-- **新對話 / 我的內容 / Gem / 設定與說明**
+Use completion signals and precedence in `references/completion-signals.md`.
 
 ---
 
-## 7) Communication style
+## 5) Return output to user
 
-1. Confirm concrete action (“已幫你按開始研究”).
-2. If blocked, ask for one minimal user action only.
-3. After recovery, continue automatically.
-4. Avoid repeated back-and-forth if issue is relay-side.
+When done, return:
+
+1. short actionable summary first,
+2. key conclusion and market stage (if research report),
+3. actionable checklist,
+4. source-quality note when references are mixed quality.
 
 ---
 
-## 8) Pitfalls checklist
+## 6) Do not (anti-patterns)
 
-- `tab not found` with visible tab list → stale targetId/relay link.
-- Plan exists but no progress → forgot to click **開始研究**.
-- Relay reset after gateway restart → tabs empty until re-attach.
-- Large report snapshots truncate → summarize visible core first, then drill down.
+- Do not switch to non-chrome profile for this task.
+- Do not assume “plan shown” means “research running”.
+- Do not judge completion from one weak signal only.
+- Do not repeatedly ask user to reattach relay before trying recovery sequence.
+- Do not dump full long report before giving concise summary.
+
+---
+
+## References
+
+- `references/recovery.md` — relay recovery order and failure handling
+- `references/monitoring.md` — session twin and optional cron monitoring template
+- `references/completion-signals.md` — completion criteria and precedence
