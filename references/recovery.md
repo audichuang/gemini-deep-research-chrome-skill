@@ -1,29 +1,25 @@
-# Recovery (Relay / Tab Failures)
+# Recovery (Relay Failures)
 
-Use this exact order when operation fails.
+The Chrome extension auto-reconnects every 3 seconds when the relay drops. Most failures resolve themselves within seconds with no user action required.
 
-## `tab not found` with visible Gemini tab
+## Standard recovery (automatic)
 
-1. Refresh tabs and pick newest Gemini `targetId`.
-2. Retry snapshot/action on new target.
-3. If still failing, ask user to re-attach Relay on current Gemini tab.
-4. Retry once.
-5. If still failing, restart gateway (`openclaw gateway restart`).
-6. Ask user to re-attach Relay again, then continue.
+1. Wait 5 seconds and retry `browser status` + `browser tabs` with `profile="chrome"`.
+2. If tabs appear, continue normally.
+3. If still no connection after 3 retries (~15 seconds), proceed to manual recovery below.
 
-## Tabs list is empty after gateway restart
+## Manual recovery (rare)
 
-This is expected until user re-attaches Relay.
+Only use this if auto-reconnect fails after 15+ seconds:
 
-Prompt user minimally:
-1. Open Gemini tab in Chrome.
-2. Click OpenClaw Browser Relay button (ON).
-3. Reply "好了".
+1. Ask user to restart gateway: `openclaw gateway restart`.
+2. Wait 10 seconds for the extension to auto-reconnect.
+3. Run `browser tabs` with `profile="chrome"` again.
+4. If tabs appear, continue. If not, ask user to refresh the Gemini tab in Chrome.
 
-Then resume automatically.
+## Important
 
-## Reliability notes
-
-- Use one minimal user action request at a time.
-- After successful recovery, continue without asking repeated confirmations.
-- Prefer re-discovering current targetId instead of reusing stale IDs.
+* **Never switch to `profile="openclaw"`** as a recovery step — that opens a different browser.
+* **Never ask the user to click the extension icon** — the extension is always auto-enabled.
+* After successful recovery, continue without repeated confirmations.
+* Prefer re-discovering current targetId instead of reusing stale IDs.
