@@ -123,11 +123,42 @@ label:"等待 Gemini 研究完成"
 
 | kind | 参数格式 | 用途 |
 |------|----------|------|
-| click | `{ref: "e123"}` | 点击按钮/链接 |
-| type | `{ref: "e123", text: "hello"}` | 输入文本到单个字段 |
+| click | `{ref: "e123"}` 或 `{selector: "button.primary"}` | 点击按钮/链接 |
+| type | `{ref: "e123", text: "hello"}` 或 `{selector: "input", text: "hello"}` | 输入文本到字段 |
 | fill | `{fields: [{ref: "e1", value: "val1"}, {ref: "e2", value: "val2"}]}` | 批量填充多个表单字段 |
-| select | `{ref: "e123", values: ["option1"]}` | 下拉选单 |
+| select | `{ref: "e123", values: ["option1"]}` 或 `{selector: "select", values: ["option1"]}` | 下拉选单 |
 | press | `{ref: "e123", key: "Enter"}` | 模拟按键 |
+
+### ⚠️ 重要：使用 selector 而非 ref
+
+**Gemini UI 是动态的！** 每次 snapshot 后，element ref 都会改变（e123 → e456 → e789）。不要依赖 ref！
+
+**优先使用 CSS selector**：
+
+| 场景 | 推荐 | 不推荐 |
+|------|------|--------|
+| 点击固定按钮（如「開始研究」） | `{selector: "button:contains('開始研究')"}` | `{ref: "e123"}` |
+| 输入文本到输入框 | `{selector: "textarea", text: "内容"}` | `{ref: "e123", text: "内容"}` |
+| 点击菜单项 | `{selector: "[aria-label='分享及匯出']"}` | `{ref: "e123"}` |
+| 选择下拉选项 | `{selector: "select", values: ["选项"]}` | `{ref: "e123", values: ["选项"]}` |
+
+**常用 CSS selector 示例**：
+
+```javascript
+// 文本包含
+{selector: "button:has-text('開始研究')"}
+{selector: "div:has-text('已完成')"}
+
+// 属性匹配
+{selector: "[aria-label='分享及匯出']"}
+{selector: "[data-testid='submit-btn']"}
+{selector: "[role='button']"}
+
+// 组合选择
+{selector: "button.primary"}
+{selector: "div.container button.submit"}
+{selector: "form textarea"}
+```
 
 ### ⚠️ 常见错误
 
@@ -138,9 +169,10 @@ label:"等待 Gemini 研究完成"
 
 ### 关键原则
 
-1. **每次 act 前必须先 snapshot** — 永远不要使用超过 30 秒前的 element reference
-2. **页面刷新后立即 snapshot** — 任何导航、点击后都要重新获取 DOM
-3. **如果收到 "Element not found"** → 立即获取新 snapshot 后重试
+1. **永远使用 CSS selector，不要用 ref** — ref 在 Gemini 中每次都变，selector 才是稳定的
+2. **每次 act 前必须先 snapshot** — 永远不要使用超过 30 秒前的 element reference
+3. **页面刷新后立即 snapshot** — 任何导航、点击后都要重新获取 DOM
+4. **如果收到 "Element not found"** → 立即获取新 snapshot 后重试，使用 selector
 
 ---
 
@@ -148,12 +180,18 @@ label:"等待 Gemini 研究完成"
 
 ### Element not found
 
-**原因**：使用了过期 snapshot 中的 element reference
+**原因 1**：使用了过期 snapshot 中的 element ref（Gemini 的 ref 每次都变）
 
 **解决**：
-1. 立即执行 `browser snapshot` 获取新 DOM
-2. 从新 snapshot 中获取正确的 ref
-3. 重试操作
+1. **不要用 ref，改用 selector！**
+2. 使用固定的 CSS selector，如 `button:has-text('開始研究')`
+3. 先 snapshot 确认 selector 能找到元素
+
+**原因 2**：Relay 会话失效（"Session with given id not found"）
+
+**解决**：
+1. 获取新 snapshot（relay 会自动重新连接）
+2. 用新 snapshot 的结果进行操作
 
 ### fields are required
 
@@ -214,6 +252,7 @@ Then immediately run post-completion handoff flow in `references/post-completion
 ## 9) Do not (anti-patterns)
 
 * **Do not use `profile="openclaw"`** — this is the #1 mistake. It opens a different browser.
+* **Do not use element ref (`ref: "e123"`)** — Gemini UI 的 ref 每次 snapshot 都会变！使用固定的 CSS selector
 * **Do not use old element references** — always snapshot before each act. This causes "Element not found" errors.
 * **Do not use wrong kind parameters** — fill requires `fields: []`, not `ref` + `text`. This causes "fields are required" errors.
 * Do not ask the user to click any extension button or manually enable relay.
