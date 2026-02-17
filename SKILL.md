@@ -1,6 +1,6 @@
 ---
 name: gemini-deep-research-chrome
-description: Operate Gemini in the user’s real Chrome via OpenClaw Browser Relay (profile=chrome): run Deep Research, monitor progress, read/export reports, and use Create features such as audio summaries. Use when user asks you to control Gemini directly in their Chrome tab.
+description: "Operate Gemini in the user’s real Chrome via OpenClaw Browser Relay (profile=chrome): run Deep Research, monitor progress, read/export reports, and use Create features such as audio summaries. Use when user asks you to control Gemini directly in their Chrome tab."
 ---
 
 # Gemini via Chrome Relay
