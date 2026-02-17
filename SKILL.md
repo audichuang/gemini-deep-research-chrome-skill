@@ -141,6 +141,20 @@ label:"等待 Gemini 研究完成"
 5. 点击「公開分享連結」或复制链接
 6. 返回给用户
 
+### 精準的 Selector（Deep Research 面板）
+
+```
+# 分享按鈕（深層研究面板內）
+selector="button[data-test-id='share-button']"
+
+# 或透過 aria-label
+selector="button[aria-label='分享報表']"
+
+# 匯出選單按鈕
+selector="button[data-test-id='export-menu-button']"
+selector="button[aria-label='匯出選單']"
+```
+
 ⚠️ 每次 click 前都必須先 snapshot！
 
 ---
