@@ -41,6 +41,18 @@ Phase 3: 主代理 - 自动获取分享链接
 
 **⚠️ 每次操作前必須先 snapshot！** Gemini 頁面的 element ref 每次都會變，絕對不要使用超過 30 秒前的 element ref。
 
+**💡 省 token 技巧**：使用 `selector` 只取特定元素，不用取整頁：
+```javascript
+// 只取輸入框區域
+browser snapshot selector="textarea"
+
+// 只取特定按鈕
+browser snapshot selector="button:has-text('開始研究')"
+
+// 取對話區域
+browser snapshot selector="main"
+```
+
 ---
 
 ## 2) Deep Research execution
@@ -80,6 +92,7 @@ sessions_spawn task:"在 Chrome 中监控 Gemini Deep Research 任务直到完�
 
 1) 使用 browser 工具，profile=\"openclaw\"
 2) 每 60 秒获取一次 snapshot（必须先 snapshot 才能获取最新的 element ref！）
+   - 省 token 技巧：用 selector=\"main\" 只取主要对话区
 3) 使用下方 Completion Signals 判断是否完成
 
 ⚠️ 重要：每次 click 或 act 操作前，必須先執行 browser snapshot 取得最新的 element ref！
@@ -120,9 +133,11 @@ label:"等待 Gemini 研究完成"
 收到子代理「完成」返回后，**立即自动执行**：
 
 1. **必须先获取新 snapshot** — 获取最新的 element ref
+   - 建议用 `selector="main"` 只取主要对话区域，省 token
 2. 点击「分享及匯出」按钮（使用 snapshot 中最新的 ref）
 3. 等待分享对话框出现
 4. **再次 snapshot** 获取对话框中的最新 ref
+   - 可用 `selector=".dialog-content"` 只取对话框内容
 5. 点击「公開分享連結」或复制链接
 6. 返回给用户
 
