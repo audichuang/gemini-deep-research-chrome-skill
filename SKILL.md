@@ -52,6 +52,16 @@ browser snapshot profile=openclaw selector="button[data-test-id='share-button']"
 // browser snapshot profile=openclaw
 ```
 
+**⚠️ 重要：如果沒有使用 selector 或 selector 錯誤，snapshot 的內容會不同，element ref 也會改變！**
+- 沒有 selector → 取整頁 → element ref 是完整的（如 e1, e20, e135）
+- 有 selector → 只取部分 → element ref 是局部的（如 e1, e5, e10）
+- **這會導致你用錯誤的 ref 去 click，出現 "Element not found"！**
+
+**解決方法：**
+1. 始終使用相同的 selector 模式（建議都用 `selector="main"`）
+2. 如果出現 "Element not found"，立即重新 snapshot 取得正確的 ref
+3. 不要混用「有 selector」和「沒有 selector」的 snapshot
+
 ---
 
 ## 2) Deep Research execution
