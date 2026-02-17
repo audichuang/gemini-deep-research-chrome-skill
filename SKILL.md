@@ -42,14 +42,18 @@ Phase 3: 主代理 - 自动获取分享链接
 
 **⚠️ 每次操作前必須先 snapshot！** Gemini 頁面的 element ref 每次都會變，絕對不要使用超過 30 秒前的 element ref。
 
-**🔴 強制要求：必須使用 selector 省 token！**
+**🔴 強制要求：必須使用穩定 selector 省 token！**
 ```javascript
-// ✅ 正确：使用 selector 只取需要的内容
+// ✅ 正確：優先使用穩定 selector（避免抓整頁）
 browser snapshot profile=openclaw selector="main"
-browser snapshot profile=openclaw selector="textarea"
 browser snapshot profile=openclaw selector="button[data-test-id='share-button']"
+browser snapshot profile=openclaw selector="[role='dialog']"
 
-// ❌ 错误：不要取整页，會浪費大量 token！
+// ✅ 退而求其次：當 data-test-id 不存在時
+browser snapshot profile=openclaw selector="button[aria-label='分享報表']"
+browser snapshot profile=openclaw selector="button[aria-label='匯出選單']"
+
+// ❌ 錯誤：不要取整頁，會浪費大量 token 且 ref 不穩
 // browser snapshot profile=openclaw
 ```
 
@@ -158,24 +162,31 @@ label:"等待 Gemini 研究完成"
    ```
 2. 点击「分享及匯出」按钮（使用 snapshot 中最新的 ref）
 3. 等待分享对话框出现
-4. **再次 snapshot** 必须使用 selector
+4. **再次 snapshot** 必須使用穩定 selector（優先抓 role）
    ```javascript
-   browser snapshot profile=openclaw selector=".dialog-content"
+   // 優先：穩定抓分享對話框
+   browser snapshot profile=openclaw selector="[role='dialog']"
+
+   // 備援：若 role 無法抓到再用容器 class
+   // browser snapshot profile=openclaw selector=".dialog-content"
    ```
-5. 点击「公開分享連結」或复制链接
+5. 優先從對話框直接讀取可分享連結（如 `gemini.google.com/share/...`）；若沒有顯示，再點「公開分享連結」
 6. 返回给用户
 
-### 精準的 Selector（Deep Research 面板）
+### 精準且穩定的 Selector（Deep Research 面板）
 
 ```
-# 分享按鈕（深層研究面板內）
+# 1) 報表分享入口（優先）
 selector="button[data-test-id='share-button']"
 
-# 或透過 aria-label
-selector="button[aria-label='分享報表']"
+# 2) 對話框（優先）
+selector="[role='dialog']"
 
-# 匯出選單按鈕
-selector="button[data-test-id='export-menu-button']"
+# 3) 分享連結（直接抓結果）
+selector="a[href*='gemini.google.com/share/']"
+
+# 4) 備援（當 data-test-id 不存在）
+selector="button[aria-label='分享報表']"
 selector="button[aria-label='匯出選單']"
 ```
 
@@ -255,10 +266,11 @@ Then immediately run post-completion handoff:
 4. 完成后立即获取分享链接
 
 **如果 browser 操作失败：**
-1. 检查是否使用了 selector（没有 selector 容易导致问题）
-2. 立即重新 snapshot 获取最新 element ref
-3. 如果还是失败，检查 browser status 和 tabs 状态
-4. 不要 restart gateway（openclaw profile 不需要）
+1. 先檢查 selector 是否穩定（優先 `main`、`button[data-test-id='share-button']`、`[role='dialog']`）
+2. 不要盲目整頁 snapshot；只對目標區塊重新 snapshot 取得最新 ref
+3. 若分享菜單打不開，改走：`share-button` → `[role='dialog']` → `a[href*='gemini.google.com/share/']`
+4. 如果还是失败，检查 browser status 和 tabs 状态
+5. 不要 restart gateway（openclaw profile 不需要）
 
 **如果 token 超限（429 错误）：**
 1. 减少 snapshot 频率（从 30 秒延长到 60-90 秒）
