@@ -79,7 +79,6 @@ sessions_spawn task:"在 Chrome 中监控 Gemini Deep Research 任务直到完�
 1) 使用 browser 工具，profile=\"openclaw\"
 2) 每 60-120 秒获取一次 snapshot
 3) 使用 completion-signals.md 判断是否完成
-4) 如果收到 'Element not found' 错误 → 立即获取新 snapshot 后重试
 
 完成条件（使用 completion-signals.md 判断）：
 - 出现「已完成」标志
@@ -116,14 +115,10 @@ label:"等待 Gemini 研究完成"
 收到子代理「完成」返回后，**立即自动执行**：
 
 1. **获取新 snapshot** — 必须先获取新 DOM
-2. 点击「分享及匯出」按钮 (使用 selector: `[aria-label='分享及匯出']` 或 `button:has-text('分享')`)
+2. 点击「分享及匯出」按钮
 3. 等待分享对话框出现
 4. 点击「公開分享連結」或复制链接
 5. 返回给用户
-
-**重要**：使用 selector，不要用 ref！例如：
-- `{selector: "button:has-text('分享及匯出')"}`
-- `{selector: "button:has-text('公開分享連結')"}`
 
 ---
 
