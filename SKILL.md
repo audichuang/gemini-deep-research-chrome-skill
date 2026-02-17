@@ -36,8 +36,10 @@ Phase 3: 主代理 - 自动获取分享链接
 1. Run `browser status profile=openclaw`.
 2. Run `browser tabs`.
 3. **檢查是否已有 Gemini 分頁** (`gemini.google.com`)。
-   - **如果有**：**直接使用現有分頁**，點擊該分頁的鏈接繼續操作
-   - **如果沒有**：才開啟新分頁，導航至 `https://gemini.google.com`
+   - **檢查內容匹配**：如果已有現有分頁，**必須檢查該分頁的研究主題是否與用戶請求匹配**
+     - ✅ **匹配**：例如用戶問「東京機票」，現有分頁標題也是「東京機票」→ 繼續使用
+     - ❌ **不匹配**：例如用戶問「北海道」，現有分頁是「福岡」或「東京」→ **必須開新分頁**，導航至 `https://gemini.google.com/app` 開始新研究
+   - **如果沒有**：開啟新分頁，導航至 `https://gemini.google.com`
 4. Do NOT ask the user to open tabs or click any buttons.
 
 **⚠️ 每次操作前必須先 snapshot！** Gemini 頁面的 element ref 每次都會變，絕對不要使用超過 30 秒前的 element ref。
