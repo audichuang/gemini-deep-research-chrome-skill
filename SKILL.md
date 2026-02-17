@@ -124,6 +124,8 @@ sessions_spawn task:"在 Chrome 中监控 Gemini Deep Research 任务直到完�
 label:"等待 Gemini 研究完成"
 ```
 
+**Fallback 提醒**：如果子代理 spawn 失败（如 forbidden 错误），主代理必须立即接管监控任务，自己执行 browser snapshot 检查进度，不能放弃！研究完成后立即获取分享链接。
+
 ### Completion Signals (判断完成)
 
 **强烈信号（高可信度）**：
@@ -217,9 +219,24 @@ Then immediately run post-completion handoff:
 
 ---
 
-## 7) Do not (anti-patterns)
+## 7) 强制要求与 Fallback 策略
 
-- Do not use `profile="chrome"` — always use `profile="openclaw"` for stability
+### 🔴 强制要求（必须遵守）
+
+**1. 必须使用 profile="openclaw"**
+- 绝对不要使用 profile="chrome"
+
+**2. 必须使用 selector 节省 token**
+- ✅ 正确：`browser snapshot profile=openclaw selector="main"`
+- ❌ 错误：`browser snapshot profile=openclaw`（会消耗大量 token！）
+- 如果没有使用 selector 导致 "Element not found" 或 token 超限，必须重试并加上 selector
+
+**3. 必须每次操作前都 snapshot**
+- 每次 click、type、act 之前，必须先执行 browser snapshot
+- 绝对不能使用超过 30 秒前的 element ref
+
+### ⚠️ Do not（禁止事项）
+
 - Do not assume "plan shown" means "research running"
 - Do not judge completion from one weak signal only
 - Do not ask the user to manually open tabs, click buttons, or enable any relay
@@ -227,5 +244,22 @@ Then immediately run post-completion handoff:
 - Do not dump full long report before giving concise summary
 - Do not restart gateway or browser — it's not needed with openclaw profile
 - Do not wait for user to ask for share link — automatically get it after completion
-- **Do not use old element refs** — always snapshot before every click/type/act operation
-- **Do not skip snapshot** — before any interaction, get a fresh snapshot first
+
+### 🔄 Fallback 策略（当出现问题时）
+
+**如果 sessions_spawn 失败（如 forbidden 错误）：**
+1. 不要放弃！主代理必须立即接管监控任务
+2. 使用 exec sleep 30/60 等待，然后自己执行 browser snapshot 检查进度
+3. 持续监控直到研究完成
+4. 完成后立即获取分享链接
+
+**如果 browser 操作失败：**
+1. 检查是否使用了 selector（没有 selector 容易导致问题）
+2. 立即重新 snapshot 获取最新 element ref
+3. 如果还是失败，检查 browser status 和 tabs 状态
+4. 不要 restart gateway（openclaw profile 不需要）
+
+**如果 token 超限（429 错误）：**
+1. 减少 snapshot 频率（从 30 秒延长到 60-90 秒）
+2. 确保每次都使用 selector="main" 减少 token 消耗
+3. 等待几分钟后再继续
