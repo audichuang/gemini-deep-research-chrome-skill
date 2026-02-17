@@ -4,8 +4,8 @@ Use this when speed matters.
 
 ## A) Deep Research fast path
 
-1. `browser status` + `browser tabs` with `profile="chrome"`.
-2. Open Gemini tab target.
+1. `browser status` + `browser tabs`.
+2. Find or open Gemini tab (`gemini.google.com`).
 3. Click **工具** → enable **Deep Research**.
 4. Paste user prompt and submit.
 5. If **開始研究** appears, click it.
@@ -35,6 +35,5 @@ Use this when speed matters.
 
 ## C) If broken
 
-- `tab not found` → follow `recovery.md` exactly.
-- Never switch away from `profile="chrome"`.
-- Ask only one minimal user action per recovery step.
+- Follow `recovery.md` — retry connection, restart gateway if needed.
+- Handle everything autonomously — do NOT ask the user to click anything.
