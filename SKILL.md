@@ -41,16 +41,15 @@ Phase 3: 主代理 - 自动获取分享链接
 
 **⚠️ 每次操作前必須先 snapshot！** Gemini 頁面的 element ref 每次都會變，絕對不要使用超過 30 秒前的 element ref。
 
-**💡 省 token 技巧**：使用 `selector` 只取特定元素，不用取整頁：
+**🔴 強制要求：必須使用 selector 省 token！**
 ```javascript
-// 只取輸入框區域
-browser snapshot selector="textarea"
+// ✅ 正确：使用 selector 只取需要的内容
+browser snapshot profile=openclaw selector="main"
+browser snapshot profile=openclaw selector="textarea"
+browser snapshot profile=openclaw selector="button[data-test-id='share-button']"
 
-// 只取特定按鈕
-browser snapshot selector="button:has-text('開始研究')"
-
-// 取對話區域
-browser snapshot selector="main"
+// ❌ 错误：不要取整页，會浪費大量 token！
+// browser snapshot profile=openclaw
 ```
 
 ---
@@ -92,11 +91,15 @@ sessions_spawn task:"在 Chrome 中监控 Gemini Deep Research 任务直到完�
 
 1) 使用 browser 工具，profile=\"openclaw\"
 2) 每 60 秒获取一次 snapshot（必须先 snapshot 才能获取最新的 element ref！）
-   - 省 token 技巧：用 selector=\"main\" 只取主要对话区
+   **必须使用 selector="main" 只取主要对话区，不要取整页！**
+   错误：browser snapshot profile=openclaw
+   正确：browser snapshot profile=openclaw selector=main
 3) 使用下方 Completion Signals 判断是否完成
 
-⚠️ 重要：每次 click 或 act 操作前，必須先執行 browser snapshot 取得最新的 element ref！
-千萬不要使用舊的 ref，否則會出現 'Element not found' 錯誤。
+⚠️ 重要：
+- 每次 click 或 act 操作前，必須先執行 browser snapshot 取得最新的 element ref！
+- **每次 snapshot 都必須使用 selector="main"，否則會消耗大量 token！**
+- 千萬不要使用舊的 ref，否則會出現 'Element not found' 錯誤。
 
 完成条件（参见下方 Completion Signals）：
 - 出现「已完成」标志
@@ -132,12 +135,20 @@ label:"等待 Gemini 研究完成"
 
 收到子代理「完成」返回后，**立即自动执行**：
 
-1. **必须先获取新 snapshot** — 获取最新的 element ref
-   - 建议用 `selector="main"` 只取主要对话区域，省 token
+1. **必须先获取新 snapshot** — 必须使用 selector
+   ```javascript
+   // 正确：使用 selector 只取主要区域
+   browser snapshot profile=openclaw selector="main"
+   
+   // 错误：不要这样，会取整页浪费 token
+   // browser snapshot profile=openclaw
+   ```
 2. 点击「分享及匯出」按钮（使用 snapshot 中最新的 ref）
 3. 等待分享对话框出现
-4. **再次 snapshot** 获取对话框中的最新 ref
-   - 可用 `selector=".dialog-content"` 只取对话框内容
+4. **再次 snapshot** 必须使用 selector
+   ```javascript
+   browser snapshot profile=openclaw selector=".dialog-content"
+   ```
 5. 点击「公開分享連結」或复制链接
 6. 返回给用户
 
@@ -155,7 +166,7 @@ selector="button[data-test-id='export-menu-button']"
 selector="button[aria-label='匯出選單']"
 ```
 
-⚠️ 每次 click 前都必須先 snapshot！
+⚠️ **必須使用 selector！** 每次 snapshot 都要加 `selector="main"`，否則會消耗大量 token！
 
 ---
 
