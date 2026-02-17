@@ -18,7 +18,7 @@ If user does not choose, suggest the most useful default:
 
 ## Operator behavior
 
-1. Detect completion using `completion-signals.md`.
+1. Detect completion using the Completion Signals in SKILL.md §3.
 2. Return concise report summary.
 3. Immediately provide the next-action menu above.
 4. If user confirms an action, execute it directly.

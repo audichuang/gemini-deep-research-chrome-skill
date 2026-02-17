@@ -9,13 +9,14 @@ Use this when speed matters.
 3. Click **工具** → enable **Deep Research**.
 4. Paste user prompt and submit.
 5. If **開始研究** appears, click it.
-6. Monitor until strong completion signal appears (see `completion-signals.md`).
-7. Return:
+6. `sessions_spawn` to monitor — see SKILL.md §3.
+7. When complete, return:
    - 5-10 bullet summary,
    - final stance,
    - action list,
    - source-quality note.
-8. Immediately offer next-action menu:
+8. Immediately get share link (SKILL.md §4).
+9. Offer next-action menu:
    - 建立語音摘要（default）
    - 建立資訊圖表
    - 建立測驗
@@ -35,5 +36,5 @@ Use this when speed matters.
 
 ## C) If broken
 
-- Follow `recovery.md` — retry connection, restart gateway if needed.
-- Handle everything autonomously — do NOT ask the user to click anything.
+- Follow `recovery.md` — retry connection autonomously.
+- Do NOT ask the user to click anything.

@@ -19,7 +19,7 @@ Phase 1: 主代理 - 启动研究
 
 Phase 2: 等待子代理 (sessions_spawn)
 ├── 1. 每 60-120 秒 snapshot 检查进度
-├── 2. 根据 completion-signals.md 判断完成
+├── 2. 根据 Completion Signals 判断完成
 └── 3. 返回「已完成，可获取分享链接」
 
 Phase 3: 主代理 - 自动获取分享链接
@@ -67,7 +67,7 @@ Deep Research 需要數分鐘到數十分鐘，**必须**使用 `sessions_spawn`
 
 等待子代理：
 1. 每 60-120 秒获取 snapshot 检查进度
-2. 使用 completion-signals.md 判断完成
+2. 使用下方 Completion Signals 判断完成
 3. 完成后返回「研究报告已完成」
 ```
 
@@ -78,9 +78,9 @@ sessions_spawn task:"在 Chrome 中监控 Gemini Deep Research 任务直到完�
 
 1) 使用 browser 工具，profile=\"openclaw\"
 2) 每 60-120 秒获取一次 snapshot
-3) 使用 completion-signals.md 判断是否完成
+3) 使用下方 Completion Signals 判断是否完成
 
-完成条件（使用 completion-signals.md 判断）：
+完成条件（参见下方 Completion Signals）：
 - 出现「已完成」标志
 - 或 Gemini 明确显示「研究完成」
 - 或出现「分享及匯出」按钮

@@ -16,11 +16,11 @@ Unless user explicitly requests manual polling, treat `sessions_spawn` as requir
 
 ### `sessions_spawn` task template
 
-"Monitor a running Gemini task in Chrome Relay until completion.
+"Monitor a running Gemini Deep Research task until completion.
 1) Use browser tool with profile=openclaw.
 2) Snapshot current Gemini tab every 60-120 seconds.
-3) Apply completion precedence from completion-signals.md.
-4) If relay fails, follow recovery.md, then continue polling.
+3) Apply completion signals from SKILL.md §3 (strong/medium/weak).
+4) If connection fails, follow recovery.md, then continue polling.
 5) On completion, return:
    - report/title,
    - final summary/conclusion,
@@ -44,7 +44,7 @@ Suggested reminder text style:
 
 ## Failure handling in monitoring
 
-If polling hits relay errors repeatedly:
+If polling hits connection errors repeatedly:
 1. run recovery flow (`recovery.md`),
 2. continue polling after recovery,
 3. do not mark failed unless task itself fails or user stops it.
