@@ -39,6 +39,8 @@ Phase 3: 主代理 - 自动获取分享链接
 4. If no Gemini tab exists, **open one yourself** — navigate to `https://gemini.google.com`.
 5. Do NOT ask the user to open tabs or click any buttons.
 
+**⚠️ 每次操作前必須先 snapshot！** Gemini 頁面的 element ref 每次都會變，絕對不要使用超過 30 秒前的 element ref。
+
 ---
 
 ## 2) Deep Research execution
@@ -77,8 +79,11 @@ Deep Research 需要數分鐘到數十分鐘，**必须**使用 `sessions_spawn`
 sessions_spawn task:"在 Chrome 中监控 Gemini Deep Research 任务直到完成。
 
 1) 使用 browser 工具，profile=\"openclaw\"
-2) 每 60-120 秒获取一次 snapshot
+2) 每 60 秒获取一次 snapshot（必须先 snapshot 才能获取最新的 element ref！）
 3) 使用下方 Completion Signals 判断是否完成
+
+⚠️ 重要：每次 click 或 act 操作前，必須先執行 browser snapshot 取得最新的 element ref！
+千萬不要使用舊的 ref，否則會出現 'Element not found' 錯誤。
 
 完成条件（参见下方 Completion Signals）：
 - 出现「已完成」标志
@@ -114,11 +119,14 @@ label:"等待 Gemini 研究完成"
 
 收到子代理「完成」返回后，**立即自动执行**：
 
-1. **获取新 snapshot** — 必须先获取新 DOM
-2. 点击「分享及匯出」按钮
+1. **必须先获取新 snapshot** — 获取最新的 element ref
+2. 点击「分享及匯出」按钮（使用 snapshot 中最新的 ref）
 3. 等待分享对话框出现
-4. 点击「公開分享連結」或复制链接
-5. 返回给用户
+4. **再次 snapshot** 获取对话框中的最新 ref
+5. 点击「公開分享連結」或复制链接
+6. 返回给用户
+
+⚠️ 每次 click 前都必須先 snapshot！
 
 ---
 
@@ -169,3 +177,5 @@ Then immediately run post-completion handoff:
 - Do not dump full long report before giving concise summary
 - Do not restart gateway or browser — it's not needed with openclaw profile
 - Do not wait for user to ask for share link — automatically get it after completion
+- **Do not use old element refs** — always snapshot before every click/type/act operation
+- **Do not skip snapshot** — before any interaction, get a fresh snapshot first
